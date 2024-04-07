@@ -31,7 +31,7 @@ export default function CreateTicket({ id, enquiry, close }) {
     client,
     enquiryId,
   }) {
-    const resp = await fetch(`http://localhost:8080/smtp`, {
+    const resp = await fetch(`https://enquiry-crm-server.onrender.com/smtp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
