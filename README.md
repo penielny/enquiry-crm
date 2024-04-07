@@ -1,6 +1,6 @@
 # Enquiry CRM (Customer Relationship Management)
 
-The Enquiry CRM (Customer Relationship Management) system is a web-based application designed to streamline the management of customer enquiries. It provides a centralized platform for businesses to track, manage, and respond to customer inquiries efficiently. The system facilitates communication, task management, and data analysis, ultimately enhancing customer satisfaction and business productivity.
+The Enquiry CRM (Customer Relationship Management) system is a web-based application designed to streamline the management of customer enquiries. It provides a centralized platform for businesses to track, manage, and respond to customer inquiries efficiently. The system facilitates communication, task management, and ultimately enhancing customer satisfaction and business productivity.
 
 ## Dependencies
 
