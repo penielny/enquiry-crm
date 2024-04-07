@@ -31,7 +31,7 @@ export default function AddEnquiry() {
     attachment: "",
   });
 
-  const onUploadFile = (file) => {
+  const onUploadFile = async (file) => {
     if (file) {
       const storageRef = ref(
         firebase_storage,
@@ -49,8 +49,8 @@ export default function AddEnquiry() {
         (err) => {
           console.log(err);
         },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+        async () => {
+          await getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             setDetails((prev) => ({ ...prev, attachment: url }));
           });
         },
@@ -63,25 +63,26 @@ export default function AddEnquiry() {
     phoneNumber,
     firstName,
     lastName,
-    category,
   }) {
     try {
       const clientsCollectionRef = collection(db, "clients");
-      await addDoc(clientsCollectionRef, {
+      const snap = await addDoc(clientsCollectionRef, {
         emailAddress: emailAddress.toLowerCase(),
         phoneNumber,
         firstName,
         lastName,
-        category,
         createdAt: serverTimestamp(),
       });
       toast.success("Client added successfully");
+      return snap;
     } catch (error) {
       toast.error(error.message);
+      return null;
     }
   }
 
   async function isClientRecordExist({ emailAddress }) {
+    console.log(emailAddress, "emailAddress");
     const clientsCollectionRef = collection(db, "clients");
     const q = query(
       clientsCollectionRef,
@@ -90,17 +91,18 @@ export default function AddEnquiry() {
 
     try {
       const querySnapshot = await getDocs(q);
-      return { isEmpty: !querySnapshot.empty, querySnapshot };
+      return { isCreated: !querySnapshot.empty, querySnapshot };
     } catch (error) {
       toast.error(error.message);
-      return false;
+      return { isCreated: false, message: error.message };
     }
   }
 
   async function addEnquiryDocument({ enuiryId }) {
+    console.log(enuiryId, details);
     try {
       const enquiresCollectionRef = collection(db, "enquiry");
-      const snapshot = await addDoc(enquiresCollectionRef, {
+      await addDoc(enquiresCollectionRef, {
         emailAddress: details.emailAddress.toLowerCase(),
         category: details.category,
         message: details.message,
@@ -118,13 +120,15 @@ export default function AddEnquiry() {
 
   async function onAddEnquiry() {
     seLoading(true);
+    let newUserSnapshot = null;
     try {
       if (details.emailAddress === "" || !isValidEmail(details.emailAddress))
         return toast.error(`please make sure to fill the form`);
-      const { isEmpty: isClient, querySnapshot } = await isClientRecordExist({
+      const { isCreated, querySnapshot } = await isClientRecordExist({
         emailAddress: details.emailAddress,
       });
-      if (!isClient) {
+      console.log(isCreated, querySnapshot, "check_user");
+      if (!isCreated) {
         if (
           details.firstName === "" ||
           details.lastName === "" ||
@@ -133,21 +137,26 @@ export default function AddEnquiry() {
           return toast.error(
             `please fill the client form. this client does not exist in our records`,
           );
-        await onAddClient({
+        newUserSnapshot = await onAddClient({
           emailAddress: details.emailAddress,
           firstName: details.firstName,
           lastName: details.lastName,
           phoneNumber: details.phoneNumber,
         });
 
+        console.log(newUserSnapshot, "clinet ID");
         toast.success(`Client has been add successfully`);
       }
       // first uplaod image then add to enquiry data
       if (isFile) {
         await onUploadFile(uploadFile);
       }
+
+      console.log(newUserSnapshot, querySnapshot?.docs[0]?.id);
       // add enquiry
-      await addEnquiryDocument({ enuiryId: querySnapshot?.docs[0]?.id });
+      await addEnquiryDocument({
+        enuiryId: isCreated ? querySnapshot?.docs[0]?.id : newUserSnapshot?.id,
+      });
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -317,6 +326,7 @@ export default function AddEnquiry() {
             <div className="flex flex-col space-y-2">
               <p>Enquiry Category</p>
               <select
+                value={details.category}
                 defaultValue={"tech"}
                 onChange={(e) => {
                   setDetails((prev) => ({ ...prev, category: e.target.value }));

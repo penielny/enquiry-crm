@@ -26,30 +26,6 @@ export default function Enquiry() {
   let { id } = useParams();
   const navigate = useNavigate();
 
-  async function getRecentEnquires() {
-    if (!enquiry?.emailAddress) return;
-    const enquiriesRef = collection(db, "enquiry");
-
-    const q = query(
-      enquiriesRef,
-      where("emailAddress", "==", enquiry?.emailAddress?.toLowerCase()),
-      orderBy("createdAt"),
-      limit(5),
-    );
-
-    try {
-      const querySnapshot = await getDocs(q);
-      let enq_ = [];
-      querySnapshot.docs.forEach((doc) => {
-        enq_.push({ id: doc.id, ...doc.data() });
-      });
-
-      setEnquires(enq_);
-    } catch (error) {
-      console.error("Error getting documents: ", error);
-    }
-  }
-
   function summarizeMessage(message) {
     if (message.length <= 100) return message; // Return the message if it's short
     return message.substring(0, 100) + "..."; // Truncate and add ellipsis
@@ -104,10 +80,34 @@ export default function Enquiry() {
   }, [enquiry]);
 
   useEffect(() => {
+    async function getRecentEnquires() {
+      if (!enquiry?.emailAddress) return;
+      const enquiriesRef = collection(db, "enquiry");
+
+      const q = query(
+        enquiriesRef,
+        where("emailAddress", "==", enquiry?.emailAddress?.toLowerCase()),
+        orderBy("createdAt"),
+        limit(5),
+      );
+
+      try {
+        const querySnapshot = await getDocs(q);
+        let enq_ = [];
+        querySnapshot.docs.forEach((doc) => {
+          enq_.push({ id: doc.id, ...doc.data() });
+        });
+
+        setEnquires(enq_);
+      } catch (error) {
+        console.error("Error getting documents: ", error);
+      }
+    }
+
     if (enquiry) {
       getRecentEnquires();
     }
-  }, [enquiry, getRecentEnquires]);
+  }, [enquiry]);
 
   return (
     <div className="flex-1 flex flex-col w">
@@ -230,7 +230,7 @@ export default function Enquiry() {
           </div>
         </div>
         {/* client information and recent enquires. */}
-        <div className="w-2/5 border-l flex flex-col overflow-y-auto items-center py-10">
+        <div className="w-2/5 h-[95vh] border-l flex flex-col overflow-y-auto items-center py-10">
           <img
             className="h-48 w-48 rounded-full"
             src={`https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg`}
