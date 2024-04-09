@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 
 export default function AddClient({ client }) {
   const { toggleAddClient } = useModal();
-  const [loading, seLoading] = useState();
+  const [loading, setLoading] = useState();
   const [details, setDetails] = useState({
     emailAddress: "",
     phoneNumber: "",
@@ -42,7 +42,7 @@ export default function AddClient({ client }) {
     }
   }, [client]);
   async function onAddClient() {
-    seLoading(true);
+    setLoading(true);
     const clientsCollectionRef = collection(db, "clients");
     const q = query(
       clientsCollectionRef,
@@ -66,12 +66,12 @@ export default function AddClient({ client }) {
     } catch (error) {
       console.error("Error adding client: ", error);
     } finally {
-      seLoading(false);
+      setLoading(false);
     }
   }
 
   async function onUpdateClient() {
-    seLoading(true);
+    setLoading(true);
     try {
       const docRef = doc(db, "clients", client?.id);
       await updateDoc(docRef, {
@@ -79,12 +79,12 @@ export default function AddClient({ client }) {
         updatedAt: serverTimestamp(),
       });
       toast.success(`Enquiry successfully closed.`);
-      close();
+      toggleAddClient(false);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
     } finally {
-      seLoading(true);
+      setLoading(false);
     }
   }
 
