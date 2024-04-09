@@ -1,16 +1,11 @@
 import React from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Route,
-  Link,
-} from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/authentication";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AuthProvider } from "./context/authentication";
 import RequireAuth from "./util/RequireAuth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import RequireNoAuth from "./util/RequireNoAuth";
-import DashboardLayout from "./layout/dashboard";
+import DashboardLayout from "./layout/Dashboard";
 import Dashboard from "./pages/Dashboard";
 import Clients from "./pages/Clients";
 import Enquiries from "./pages/Enquiries";
