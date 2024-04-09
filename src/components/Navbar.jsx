@@ -119,11 +119,9 @@ export default function Navbar() {
     return () => unsubscribe();
   }, []);
 
-  console.log(notifications);
-
   return (
     <>
-      <div className=" border-b border-b-gray-200 bg-white backdrop-blur-sm bg-opacity-40">
+      <div className=" border-b border-b-gray-200 bg-white backdrop-blur-sm bg-opacity-40 ">
         <div className="flex flex-row items-center container mx-auto py-5 space-x-10">
           <NavLink to="/dashboard">
             <img
@@ -229,7 +227,7 @@ export default function Navbar() {
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col flex-1 overflow-y-auto">
+                <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar">
                   {notifications.map((noti, idx) => (
                     <Link
                       key={idx + "notification"}

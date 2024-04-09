@@ -1,5 +1,5 @@
 import { useModal } from "@/context/modals";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   collection,
   addDoc,
@@ -9,11 +9,12 @@ import {
   where,
   query,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./../../firebase";
 import toast from "react-hot-toast";
 
-export default function AddClient() {
+export default function AddClient({ client }) {
   const { toggleAddClient } = useModal();
   const [loading, seLoading] = useState();
   const [details, setDetails] = useState({
@@ -23,6 +24,23 @@ export default function AddClient() {
     lastName: "",
   });
 
+  useEffect(() => {
+    if (client) {
+      setDetails({
+        emailAddress: client?.emailAddress,
+        phoneNumber: client?.phoneNumber,
+        firstName: client?.firstName,
+        lastName: client?.lastName,
+      });
+    } else {
+      setDetails({
+        emailAddress: "",
+        phoneNumber: "",
+        firstName: "",
+        lastName: "",
+      });
+    }
+  }, [client]);
   async function onAddClient() {
     seLoading(true);
     const clientsCollectionRef = collection(db, "clients");
@@ -51,6 +69,25 @@ export default function AddClient() {
       seLoading(false);
     }
   }
+
+  async function onUpdateClient() {
+    seLoading(true);
+    try {
+      const docRef = doc(db, "clients", client?.id);
+      await updateDoc(docRef, {
+        ...details,
+        updatedAt: serverTimestamp(),
+      });
+      toast.success(`Enquiry successfully closed.`);
+      close();
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    } finally {
+      seLoading(true);
+    }
+  }
+
   return (
     <div className="absolute top-0 bottom-0 right-0 left-0 bg-black/50 backdrop-blur-md flex overflow-hidden">
       <div className="w-2/3 items-center justify-center flex flex-col space-y-5 bg-white">
@@ -63,6 +100,7 @@ export default function AddClient() {
             <div className="flex items-center space-x-3">
               <div className="flex flex-row items-center border py-6 px-3 pt-7 rounded-md w-2/4 relative">
                 <input
+                  value={details.firstName}
                   onChange={(e) =>
                     setDetails((prev) => ({
                       ...prev,
@@ -84,6 +122,7 @@ export default function AddClient() {
               </div>
               <div className="flex flex-row items-center border py-6 px-3 pt-7 rounded-md w-2/4 relative">
                 <input
+                  value={details.lastName}
                   onChange={(e) =>
                     setDetails((prev) => ({
                       ...prev,
@@ -108,6 +147,7 @@ export default function AddClient() {
             <div className="flex items-center space-x-3">
               <div className="flex flex-row items-center border py-6 px-3 pt-7 rounded-md w-2/4 relative">
                 <input
+                  value={details.emailAddress}
                   onChange={(e) =>
                     setDetails((prev) => ({
                       ...prev,
@@ -129,6 +169,7 @@ export default function AddClient() {
               </div>
               <div className="flex flex-row items-center border py-6 px-3 pt-7 rounded-md w-2/4 relative">
                 <input
+                  value={details.phoneNumber}
                   onChange={(e) =>
                     setDetails((prev) => ({
                       ...prev,
@@ -153,7 +194,13 @@ export default function AddClient() {
             <div className="flex flex-row items-center space-x-10">
               <button
                 disabled={loading}
-                onClick={onAddClient}
+                onClick={() => {
+                  if (client) {
+                    onUpdateClient();
+                  } else {
+                    onAddClient();
+                  }
+                }}
                 className="bg-yellow-500 flex items-center justify-center px-5 py-4 rounded-md font-medium text-white w-52"
               >
                 {loading ? (

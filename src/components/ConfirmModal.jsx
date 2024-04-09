@@ -104,8 +104,8 @@ export default function CreateTicket({ id, enquiry, close }) {
   return (
     <>
       {/* close modal */}
-      <div className="bg-black/30 absolute -top-24 left-0 bottom-0 right-0  flex items-center justify-center pt-10">
-        <div className="h-[90vh] -mt-8 w-3/6 bg-white relative  shadow-sm z-10 rounded-lg  flex flex-col space-y-3   overflow-hidden">
+      <div className="bg-black/30 absolute top-0 left-0 bottom-0 right-0  flex items-center justify-center overflow-hidden  ">
+        <div className="h-[85vh]  overflow-hidden w-3/6 bg-white relative  shadow-sm z-10 rounded-lg  flex flex-col space-y-3   ">
           <div className="p-5 border-b flex items-center space-x-5">
             <div className=" p-3 bg-gray-100 rounded-full">
               <svg
@@ -229,7 +229,7 @@ export default function CreateTicket({ id, enquiry, close }) {
         {/* close */}
         <div
           onClick={close}
-          className="bg-black/30 absolute -top-24 left-0 bottom-0 right-0  flex items-center justify-center"
+          className="bg-black/10 absolute -top-24 left-0 bottom-0 right-0  flex items-center justify-center"
         ></div>
       </div>
     </>

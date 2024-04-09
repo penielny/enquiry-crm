@@ -52,7 +52,7 @@ export default function Enquiries() {
   );
 
   return (
-    <div className=" flex flex-col space-y-10 h-lvh pb-32 overflow-y-auto">
+    <div className=" flex flex-col space-y-10 overflow-y-auto">
       <div className="flex flex-col">
         {/* seach component */}
         <div className="container mx-auto flex flex-col space-y-10 pt-10">

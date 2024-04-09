@@ -14,7 +14,7 @@ export default function DashboardLayout() {
         {/* navbar */}
         <Navbar />
         {/* content */}
-        <div className="bg-white backdrop-blur-sm bg-opacity-40 flex flex-col flex-1">
+        <div className="bg-white backdrop-blur-sm bg-opacity-40 flex flex-col overflow-y-auto w-screen flex-1">
           {/* outlet */}
           <Outlet />
         </div>

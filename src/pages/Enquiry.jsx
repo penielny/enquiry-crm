@@ -12,8 +12,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import moment from "moment";
-import ConfirmCloseModal from "@/components/ConfirmModal";
 import CreateTicket from "@/components/ConfirmModal";
+import ConfirmCloseModal from "@/components/CreateTicket";
 export default function Enquiry() {
   const [enquiry, setEnquiry] = useState({});
   const [client, setClient] = useState({});
@@ -110,9 +110,9 @@ export default function Enquiry() {
   }, [enquiry]);
 
   return (
-    <div className="flex-1 flex flex-col w">
-      <div className="flex-1 flex flex-row">
-        <div className="flex-1 h-[95vh] flex flex-col overflow-y-auto ">
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-row ">
+        <div className="flex-1  h-[90vh] flex flex-col overflow-y-auto ">
           <div className="border-b mx-12 py-5 flex items-center justify-between">
             <div className="flex items-center space-x-5">
               <button
@@ -140,7 +140,7 @@ export default function Enquiry() {
             </div>
             <div className="flex items-center space-x-5">
               <button
-                onClick={() => setShowTickets(true)}
+                onClick={() => setShowConfirm(true)}
                 className="bg-gray-100 flex text-blue-800 space-x-5 flex-row items-center justify-center px-5 py-2 w-fit  font-medium"
               >
                 <svg
@@ -160,7 +160,7 @@ export default function Enquiry() {
               </button>
               <button
                 disabled={enquiry?.enquiryClosed}
-                onClick={() => setShowConfirm(true)}
+                onClick={() => setShowTickets(true)}
                 className="bg-gray-100 flex text-green-800 space-x-5  flex-row items-center justify-center px-5 py-2 w-fit  font-medium"
               >
                 <svg
@@ -230,7 +230,7 @@ export default function Enquiry() {
           </div>
         </div>
         {/* client information and recent enquires. */}
-        <div className="w-2/5 h-[95vh] border-l flex flex-col overflow-y-auto items-center py-10">
+        <div className="w-2/5 h-[90vh] border-l flex flex-col overflow-y-auto items-center py-10">
           <img
             className="h-48 w-48 rounded-full"
             src={`https://static.vecteezy.com/system/resources/previews/026/619/142/non_2x/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg`}
@@ -281,15 +281,16 @@ export default function Enquiry() {
           </div>
         </div>
       </div>
-
-      {showConfirm && (
-        <ConfirmCloseModal id={id} close={() => setShowConfirm(false)} />
-      )}
+      {/* <div className="absolute bg-black top-0  left-0 bottom-0 right-0 z-50"></div> */}
 
       {showTickets && (
+        <ConfirmCloseModal id={id} close={() => setShowTickets(false)} />
+      )}
+
+      {showConfirm && (
         <CreateTicket
           enquiry={enquiry}
-          close={() => setShowTickets(false)}
+          close={() => setShowConfirm(false)}
           id={id}
         />
       )}
