@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/authentication";
 import RequireAuth from "./util/RequireAuth";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import RequireNoAuth from "./util/RequireNoAuth";
 import DashboardLayout from "./layout/dashboard";
