@@ -207,7 +207,12 @@ export default function Enquiry() {
               </div>
             </div>
             {enquiry?.attachment !== "" && (
-              <div className="bg-yslate-100 border border-gray-100 min-h-16 rounded flex items-center justify-center space-x-2">
+              <Link
+                to={enquiry?.attachment}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-yslate-100 border border-gray-100 min-h-16 rounded flex items-center justify-center space-x-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -223,7 +228,7 @@ export default function Enquiry() {
                   />
                 </svg>
                 <p>View Attachment</p>
-              </div>
+              </Link>
             )}
             <DisplayText text={enquiry?.message} />
             <div className="pb-40" />
